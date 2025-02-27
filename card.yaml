@@ -1,0 +1,94 @@
+type: custom:button-card
+entity: sensor.simon_nas_temperatura
+name: NAS
+icon: mdi:nas
+aspect_ratio: 1/1
+styles:
+  card:
+    - box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3)
+    - border-radius: 10%
+    - padding: 10%
+    - color: ivory
+    - height: 111px
+    - font-size: 10px
+    - text-shadow: 0px 0px 5px black
+    - text-transform: capitalize
+  grid:
+    - grid-template-areas: "\"i temp\" \"n n\" \"cpu cpu\" \"ram ram\" \"sd sd\""
+    - grid-template-columns: 1fr 1fr
+    - grid-template-rows: 1fr min-content min-content min-content min-content
+  name:
+    - font-weight: bold
+    - font-size: 12px
+    - color: white
+    - align-self: middle
+    - justify-self: start
+    - padding-bottom: 4px
+  img_cell:
+    - justify-content: start
+    - align-items: start
+    - margin: none
+  icon:
+    - color: |
+        [[[
+          if (entity.state < 66) return 'lime';
+          if (entity.state >= 66 && entity.state < 75) return 'orange';
+          else return 'red';
+        ]]]
+    - width: 150px
+    - height: 150px
+    - margin-top: "-10%"
+    - margin-left: "-160%"
+  custom_fields:
+    temp:
+      - align-self: start
+      - justify-self: end
+    cpu:
+      - padding-bottom: 2px
+      - align-self: middle
+      - justify-self: start
+      - "--text-color-sensor": >-
+          [[[ if (states["sensor.simon_nas_utilizzo_della_cpu_totale"].state >
+          80) return "red"; ]]]
+    ram:
+      - padding-bottom: 2px
+      - align-self: middle
+      - justify-self: start
+      - "--text-color-sensor": >-
+          [[[ if (states["sensor.memory_use_percent"].state > 80) return "red";
+          ]]]
+    sd:
+      - align-self: middle
+      - justify-self: start
+      - "--text-color-sensor": >-
+          [[[ if (states["sensor.disk_use_percent"].state > 80) return "red";
+          ]]]
+custom_fields:
+  temp: |
+    [[[
+      return `<ha-icon
+        icon="mdi:thermometer"
+        style="width: 15px; height: 15px; color: red;">
+        </ha-icon><span>${entity.state}°C</span>`
+    ]]]
+  cpu: |
+    [[[
+      return `<ha-icon
+        icon="mdi:server"
+        style="width: 12px; height: 12px; color: deepskyblue;">
+        </ha-icon><span> CPU: <span style="color: var(--text-color-sensor);">${states['sensor.simon_nas_utilizzo_della_cpu_totale'].state}%</span></span>`
+    ]]]
+  ram: |
+    [[[
+      return `<ha-icon
+        icon="mdi:memory"
+        style="width: 12px; height: 12px; color: deepskyblue;">
+        </ha-icon><span> RAM: <span style="color: var(--text-color-sensor);">${states['sensor.memory_use_percent'].state}%</span></span>`
+    ]]]
+  sd: |
+    [[[
+      return `<ha-icon
+        icon="mdi:harddisk"
+        style="width: 12px; height: 12px; color: deepskyblue;">
+        </ha-icon><span> SD: <span style="color: var(--text-color-sensor);">${states['sensor.disk_use_percent'].state}%</span></span>`
+    ]]]
